@@ -1,0 +1,5967 @@
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   2   
+   3  // Problem Definition....
+   4   
+   5  Set
+   6     I 'constraints'         / i1* i2 /
+   7     J 'decision variables'  / j1*j3 /
+   8     K 'objective functions' / k1* k2 /;
+   9   
+  10  Parameter
+  11     dir(k) 'direction of the objective functions 1 for max and -1 for min' / k1 -1, k2 -1 /
+  12     b(I)   'RHS of the constraints' / i1 43, i2 4.530754296 /;
+  13   
+  14  Table c(K,J) 'matrix of objective function coefficients C'
+  15          j1  j2  j3
+  16      k1  3   -4  53
+  17      k2  -10 1   -34;
+  18   
+  19  Table a(I,J) 'matrix of constraint coefficients A'
+  20          j1              j2  j3
+  21      i1  3.141592654     -1  20
+  22      i2  7               1   0;
+  23   
+  24  Variable
+  25     Z(K) 'objective function variables'
+  26     X(J) 'decision variables';
+  27   
+  28  NonNegative Variable X;
+  29   
+  30  Equation
+  31     objfun(K) 'objective functions'
+  32     con(I)    'constraints';
+  33   
+  34  objfun(K).. sum(J, c(K,J)*X(J)) =e= Z(K);
+  35   
+  36  con(I)..    sum(J, a(I,J)*X(J)) =l= b(I);
+  37   
+  38  Model q5_1_feasible / all /;
+  39   
+  40  // Code for improved epsilon-constraint method
+  41  // (AUGMENCON-2) BEGINS here...
+  42   
+  43  Set
+  44     k1(k)  'the first element of k'
+  45     km1(k) 'all but the first elements of k'
+  46     kk(k)  'active objective function in constraint allobj';
+  47   
+  48  k1(k)$(ord(k) = 1) = yes;
+  49  km1(k)  = yes;
+  50  km1(k1) =  no;
+  51   
+  52  Parameter
+  53     rhs(k)    'right hand side of the constrained obj functions in eps-constraint'
+  54     maxobj(k) 'maximum value from the payoff table'
+  55     minobj(k) 'minimum value from the payoff table'
+  56     numk(k)   'ordinal value of k starting with 1';
+  57   
+  58  Scalar
+  59     iter         'total number of iterations'
+  60     infeas       'total number of infeasibilities'
+  61     elapsed_time 'elapsed time for payoff and e-sonstraint'
+  62     start        'start time'
+  63     finish       'finish time';
+  64   
+  65  Variable
+  66     a_objval 'auxiliary variable for the objective function'
+  67     obj      'auxiliary variable during the construction of the payoff table'
+  68     sl(k)    'slack or surplus variables for the eps-constraints';
+  69   
+  70  Positive Variable sl;
+  71   
+  72  Equation
+  73     con_obj(k) 'constrained objective functions'
+  74     augm_obj   'augmented objective function to avoid weakly efficient solutions'
+  75     allobj     'all the objective functions in one expression';
+  76   
+  77  con_obj(km1).. z(km1) - dir(km1)*sl(km1) =e= rhs(km1);
+  78   
+  79  * We optimize the first objective function and put the others as constraints
+  80  * the second term is for avoiding weakly efficient points
+  81   
+  82  augm_obj..
+  83     a_objval =e= sum(k1,dir(k1)*z(k1))
+  84           + 1e-3*sum(km1,power(10,-(numk(km1) - 1))*sl(km1)/(maxobj(km1) - minobj(km1)));
+  85   
+  86  allobj.. sum(kk, dir(kk)*z(kk)) =e= obj;
+  87   
+  88  Model
+  89     mod_payoff    / q5_1_feasible, allobj            /
+  90     mod_epsmethod / q5_1_feasible, con_obj, augm_obj /;
+  91   
+  92  Parameter payoff(k,k) 'payoff tables entries';
+  93   
+  94  Alias (k,kp);
+  95   
+  96  option optCr = 0, limRow = 0, limCol = 0, solPrint = off, solveLink = 5;
+  97   
+  98  * Generate payoff table applying lexicographic optimization
+  99  loop(kp,
+ 100     kk(kp) = yes;
+ 101     repeat
+ 102        solve mod_payoff using mip maximizing obj;
+ 103        payoff(kp,kk) = z.l(kk);
+ 104        z.fx(kk) = z.l(kk); // freeze the value of the last objective optimized
+ 105        kk(k++1) = kk(k);   // cycle through the objective functions
+ 106     until kk(kp);
+ 107     kk(kp) = no;
+ 108  *  release the fixed values of the objective functions for the new iteration
+ 109     z.up(k) =  inf;
+ 110     z.lo(k) = -inf;
+ 111  );
+ 112  if(mod_payoff.modelStat <> 1 ,
+ 113     abort 'no optimal solution for mod_payoff';);
+ 114   
+ 115  File fx / q5_1_feasible_solutions.txt /;
+ 116  put  fx ' PAYOFF TABLE'/;
+ 117  loop(kp,
+ 118     loop(k, put payoff(kp,k):12:2;);
+ 119     put /;
+ 120  );
+ 121   
+ 122  minobj(k) = smin(kp,payoff(kp,k));
+ 123  maxobj(k) = smax(kp,payoff(kp,k));
+ 124   
+ 125  * for the current problem, gridpoints is the #epsilon values
+ 126  * we try for the epsilon-constraint method..
+ 127  * because of the problem being LP with linear pareto-front
+ 128  * , this generates exactly %gridpoints% number of solutions
+ 131  Set
+ 132     g         'grid points' / g0*g99 /
+ 133     grid(k,g) 'grid';
+ 134   
+ 135  Parameter
+ 136     gridrhs(k,g) 'RHS of eps-constraint at grid point'
+ 137     maxg(k)      'maximum point in grid for objective'
+ 138     posg(k)      'grid position of objective'
+ 139     firstOffMax  'some counters'
+ 140     lastZero     'some counters'
+ 141  *  numk(k) 'ordinal value of k starting with 1'
+ 142     numg(g)      'ordinal value of g starting with 0'
+ 143     step(k)      'step of grid points in objective functions'
+ 144     jump(k)      'jumps in the grid points traversing';
+ 145   
+ 146  lastZero = 1;
+ 147  loop(km1,
+ 148     numk(km1) = lastZero;
+ 149     lastZero  = lastZero + 1;
+ 150  );
+ 151  numg(g) = ord(g) - 1;
+ 152   
+ 153  grid(km1,g) = yes; // Here we could define different grid intervals for different objectives
+ 154  maxg(km1)   = smax(grid(km1,g), numg(g));
+ 155  step(km1)   = (maxobj(km1) - minobj(km1))/maxg(km1);
+ 156  gridrhs(grid(km1,g))$(dir(km1) = -1) = maxobj(km1) - numg(g)/maxg(km1)*(maxobj(km1) - minobj(km1));
+ 157  gridrhs(grid(km1,g))$(dir(km1) =  1) = minobj(km1) + numg(g)/maxg(km1)*(maxobj(km1) - minobj(km1));
+ 158   
+ 159  put / ' Grid points' /;
+ 160   
+ 161  loop(km1, put '    ', gridrhs(km1,'g0'):0:2, ' : ', step(km1):0:2, ' : ', gridrhs(km1,'g99'):0:2;
+ 162      put /;);
+ 163   
+ 164  put / 'Efficient solutions' /;
+ 165   
+ 166  * Walk the grid points and take shortcuts if the model becomes infeasible or
+ 167  * if the calculated slack variables are greater than the step size
+ 168  posg(km1) = 0;
+ 169  iter   = 0;
+ 170  infeas = 0;
+ 171  start  = jnow;
+ 172   
+ 173  repeat
+ 174     rhs(km1) = sum(grid(km1,g)$(numg(g) = posg(km1)), gridrhs(km1,g));
+ 175     solve mod_epsmethod maximizing a_objval using mip;
+ 176     iter = iter + 1;
+ 177     if(mod_epsmethod.modelStat<>1,
+ 178        infeas = infeas + 1; // not optimal is in this case infeasible
+ 179        put iter:5:0, '  infeasible' /;
+ 180        lastZero = 0;
+ 181        loop(km1$(posg(km1)  > 0 and lastZero = 0), lastZero = numk(km1));
+ 182        posg(km1)$(numk(km1) <= lastZero) = maxg(km1); // skip all solves for more demanding values of rhs(km1)
+ 183     else
+ 184        put iter:5:0;
+ 185        loop(j, put x.l(j):12:4;);
+ 186        put /;
+ 187   
+ 188        put '':5;
+ 189        loop(k, put z.l(k):12:2;);
+ 190        jump(km1) = 1;
+ 191  *     find the first off max (obj function that hasn't reach the final grid point).
+ 192  *     If this obj.fun is k then assign jump for the 1..k-th objective functions
+ 193  *     The jump is calculated for the innermost objective function (km=1)
+ 194        jump(km1)$(numk(km1) = 1) = 1 + floor(sl.L(km1)/step(km1));
+ 195        loop(km1$(jump(km1)  > 1), put '   jump';);
+ 196        put / /;
+ 197     );
+ 198  *  Proceed forward in the grid
+ 199     firstOffMax = 0;
+ 200     loop(km1$(posg(km1) < maxg(km1) and firstOffMax = 0),
+ 201        posg(km1)   = min((posg(km1) + jump(km1)),maxg(km1));
+ 202        firstOffMax = numk(km1);
+ 203     );
+ 204     posg(km1)$(numk(km1) < firstOffMax) = 0;
+ 205     abort$(iter > 200) 'more than 200 iterations, something seems to go wrong';
+ 206  until sum(km1$(posg(km1) = maxg(km1)),1) = card(km1) and firstOffMax = 0;
+ 207   
+ 208  finish = jnow;
+ 209  elapsed_time = (finish - start)*60*60*24;
+ 210   
+ 211  put /;
+ 212  put 'Infeasibilities = ', infeas:5:0 /;
+ 213  put 'Elapsed time: ',elapsed_time:10:2, ' seconds' /;
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  36.2.0 r433180e WEX-WEI
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_payoff Using MIP From line 102
+
+
+LOOPS                                   kp   k1
+                                 FOR/WHILE   1
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            5
+BLOCKS OF VARIABLES           3     SINGLE VARIABLES            6
+NON ZERO ELEMENTS            15
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S                 kp k1
+                                  FOR/WHILE 1
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_payoff Using MIP From line 102
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_payoff          OBJECTIVE  obj
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  102
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               18.1230
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.00 ticks)
+
+
+Optimal solution found
+Objective:           18.123017
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_payoff Using MIP From line 102
+
+
+LOOPS                                   kp   k1
+                                 FOR/WHILE   2
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            5
+BLOCKS OF VARIABLES           3     SINGLE VARIABLES            6
+NON ZERO ELEMENTS            15
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S                 kp k1
+                                  FOR/WHILE 2
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_payoff Using MIP From line 102
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_payoff          OBJECTIVE  obj
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  102
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -4.5308
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -4.530754
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_payoff Using MIP From line 102
+
+
+LOOPS                                   kp   k2
+                                 FOR/WHILE   1
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            5
+BLOCKS OF VARIABLES           3     SINGLE VARIABLES            6
+NON ZERO ELEMENTS            15
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S                 kp k2
+                                  FOR/WHILE 1
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_payoff Using MIP From line 102
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_payoff          OBJECTIVE  obj
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  102
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               76.2715
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           76.271528
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_payoff Using MIP From line 102
+
+
+LOOPS                                   kp   k2
+                                 FOR/WHILE   2
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            5
+BLOCKS OF VARIABLES           3     SINGLE VARIABLES            6
+NON ZERO ELEMENTS            15
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S                 kp k2
+                                  FOR/WHILE 2
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 9
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_payoff Using MIP From line 102
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_payoff          OBJECTIVE  obj
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  102
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             -107.8335
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -107.833482
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 10
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   1
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 1
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 11
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               18.1230
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         1    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           18.123017
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 12
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   2
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 2
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 13
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               16.8507
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         3    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.02 ticks)
+
+
+Optimal solution found
+Objective:           16.850729
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 14
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   3
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 3
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 15
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               15.5784
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           15.578441
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 16
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   4
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 4
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 17
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               14.3062
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           14.306154
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 18
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   5
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 5
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 19
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               13.0339
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           13.033866
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 20
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   6
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 6
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 21
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               11.7616
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           11.761578
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 22
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   7
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 7
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 23
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               10.4893
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           10.489290
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 24
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   8
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 8
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 25
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                9.2170
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            9.217002
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 26
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   9
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 9
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 27
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                7.9447
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            7.944714
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 28
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   10
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 10
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 29
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                6.6724
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            6.672426
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 30
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   11
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 11
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 31
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                5.4001
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            5.400139
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 32
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   12
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 12
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 33
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                4.1279
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            4.127851
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 34
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   13
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 13
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 35
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                2.8556
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            2.855563
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 36
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   14
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 14
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 37
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                1.5833
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            1.583275
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 38
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   15
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 15
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 39
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                0.3110
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            0.310987
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 40
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   16
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 16
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 41
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -0.9613
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -0.961301
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 42
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   17
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 17
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 43
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -2.2336
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -2.233589
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 44
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   18
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 18
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 45
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -3.5059
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -3.505877
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 46
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   19
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 19
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 47
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -4.7782
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -4.778164
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 48
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   20
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 20
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 49
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -6.0505
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -6.050452
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 50
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   21
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 21
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 51
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -7.3227
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -7.322740
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 52
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   22
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 22
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 53
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -8.5950
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -8.595028
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 54
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   23
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 23
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 55
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -9.8673
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -9.867316
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 56
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   24
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 24
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 57
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -11.1396
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -11.139604
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 58
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   25
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 25
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 59
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -12.4119
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -12.411892
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 60
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   26
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 26
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 61
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -13.6842
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -13.684180
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 62
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   27
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 27
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 63
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -14.9565
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -14.956467
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 64
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   28
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 28
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 65
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -16.2288
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -16.228755
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 66
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   29
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 29
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 67
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -17.5010
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -17.501043
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 68
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   30
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 30
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 69
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -18.7733
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -18.773331
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 70
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   31
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 31
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 71
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -20.0456
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -20.045619
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 72
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   32
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 32
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 73
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -21.3179
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -21.317907
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 74
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   33
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 33
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 75
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -22.5902
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -22.590195
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 76
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   34
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 34
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 77
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -23.8625
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -23.862482
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 78
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   35
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 35
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 79
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -25.1348
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -25.134770
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 80
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   36
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 36
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 81
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -26.4071
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -26.407058
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 82
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   37
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 37
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 83
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -27.6793
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -27.679346
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 84
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   38
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 38
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 85
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -28.9516
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -28.951634
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 86
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   39
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 39
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 87
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -30.2239
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -30.223922
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 88
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   40
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 40
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 89
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -31.4962
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -31.496210
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 90
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   41
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 41
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 91
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -32.7685
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -32.768498
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 92
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   42
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 42
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 93
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -34.0408
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -34.040785
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 94
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   43
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 43
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 95
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -35.3131
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -35.313073
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 96
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   44
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 44
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 97
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -36.5854
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -36.585361
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 98
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   45
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 45
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 99
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -37.8576
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -37.857649
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 100
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   46
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 46
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 101
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -39.1299
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -39.129937
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 102
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   47
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 47
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 103
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -40.4022
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -40.402225
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 104
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   48
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 48
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 105
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -41.6745
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -41.674513
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 106
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   49
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 49
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 107
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -42.9468
+
+ RESOURCE USAGE, LIMIT          0.032 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -42.946800
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 108
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   50
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.031 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 50
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 109
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -44.2191
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -44.219088
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 110
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   51
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 51
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 111
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -45.4914
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -45.491376
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 112
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   52
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 52
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 113
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -46.7637
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -46.763664
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 114
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   53
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 53
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 115
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -48.0360
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -48.035952
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 116
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   54
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 54
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 117
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -49.3082
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -49.308240
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 118
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   55
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 55
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 119
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -50.5805
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -50.580528
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 120
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   56
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 56
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 121
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -51.8528
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -51.852816
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 122
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   57
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 57
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 123
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -53.1251
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -53.125103
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 124
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   58
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 58
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 125
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -54.3974
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -54.397391
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 126
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   59
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 59
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 127
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -55.6697
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -55.669679
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 128
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   60
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 60
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 129
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -56.9420
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -56.941967
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 130
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   61
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 61
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 131
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -58.2143
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -58.214255
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 132
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   62
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 62
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 133
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -59.4865
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -59.486543
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 134
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   63
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 63
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 135
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -60.7588
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -60.758831
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 136
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   64
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 64
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 137
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -62.0311
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -62.031118
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 138
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   65
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 65
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 139
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -63.3034
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -63.303406
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 140
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   66
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 66
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 141
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -64.5757
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -64.575694
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 142
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   67
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 67
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 143
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -65.8480
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -65.847982
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 144
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   68
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 68
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 145
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -67.1203
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -67.120270
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 146
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   69
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 69
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 147
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -68.3926
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -68.392558
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 148
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   70
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 70
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 149
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -69.6648
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -69.664846
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 150
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   71
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 71
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 151
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -70.9371
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -70.937134
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 152
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   72
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 72
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 153
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -72.2094
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -72.209421
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 154
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   73
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 73
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 155
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -73.4817
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -73.481709
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 156
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   74
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 74
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 157
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -74.7540
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -74.753997
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 158
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   75
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 75
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 159
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -76.0263
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -76.026285
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 160
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   76
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 76
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 161
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -77.2986
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -77.298573
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 162
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   77
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 77
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 163
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -78.5709
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -78.570861
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 164
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   78
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 78
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 165
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -79.8431
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -79.843149
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 166
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   79
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 79
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 167
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -81.1154
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -81.115436
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 168
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   80
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 80
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 169
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -82.3877
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -82.387724
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 170
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   81
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 81
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 171
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -83.6600
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -83.660012
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 172
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   82
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 82
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 173
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -84.9323
+
+ RESOURCE USAGE, LIMIT          0.031 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -84.932300
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 174
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   83
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 83
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 175
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -86.2046
+
+ RESOURCE USAGE, LIMIT          0.031 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.03sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -86.204588
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 176
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   84
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 84
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 177
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -87.4769
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -87.476876
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 178
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   85
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 85
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 179
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -88.7492
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -88.749164
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 180
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   86
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 86
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 181
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -90.0215
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -90.021452
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 182
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   87
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 87
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 183
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -91.2937
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -91.293739
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 184
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   88
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 88
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 185
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -92.5660
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -92.566027
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 186
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   89
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 89
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 187
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -93.8383
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -93.838315
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 188
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   90
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 90
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 189
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -95.1106
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -95.110603
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 190
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   91
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 91
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 191
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -96.3829
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -96.382891
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 192
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   92
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 92
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 193
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -97.6552
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -97.655179
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 194
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   93
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 93
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 195
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              -98.9275
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -98.927467
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 196
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   94
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 94
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 197
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             -100.1998
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -100.199754
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 198
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   95
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 95
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 199
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             -101.4720
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -101.472042
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 200
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   96
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 96
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 201
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             -102.7443
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -102.744330
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 202
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   97
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 97
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 203
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             -104.0166
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -104.016618
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 204
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   98
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 98
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 205
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             -105.2889
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -105.288906
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 206
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   99
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 99
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 207
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             -106.5612
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -106.561194
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 208
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE mod_epsmethod Using MIP From line 175
+
+
+LOOPS                            FOR/WHILE   100
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            18
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+               L O O P S          FOR/WHILE 100
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 209
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE mod_epsmethod Using MIP From line 175
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   mod_epsmethod       OBJECTIVE  a_objval
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  175
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             -107.8335
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -107.833482
+
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/17/21 21:15:42 Page 210
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+**** REPORT FILE SUMMARY
+
+fx C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q5_feasible\q5_1_feasible\q5_1_feasible_solutions.txt
+
+
+EXECUTION TIME       =        2.891 SECONDS      4 MB  36.2.0 r433180e WEX-WEI
+
+
+USER: GAMS Demo license for Rohit Nandwani           G210913|0002CO-GEN
+      Indian Institute Of Technology Guwahati, India           DL048134
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q5_feasible\q5_1_feasible\q5_1_feasible.gms
+Output     C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q5_feasible\q5_1_feasible\q5_1_feasible.lst

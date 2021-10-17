@@ -1,0 +1,4090 @@
+
+--- Job q5_1_feasible.gms Start 10/17/21 21:15:42 36.2.0 r433180e WEX-WEI x86 64bit/MS Windows
+--- Applying:
+    C:\GAMS\36\gmsprmNT.txt
+--- GAMS Parameters defined
+    Input "C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q5_feasible\q5_1_feasible\q5_1_feasible.gms"
+    PageSize 0
+    ScrDir "C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q5_feasible\q5_1_feasible\225a\"
+    SysDir C:\GAMS\36\
+    LogOption 3
+    ErrMsg 1
+    ErrorLog 99
+    IDE 1
+    LstTitleLeftAligned 1
+Licensee: GAMS Demo license for Rohit Nandwani           G210913|0002CO-GEN
+          Indian Institute Of Technology Guwahati, India           DL048134
+          C:\GAMS\36\gamslice.txt
+          nandwani@iitg.ac.in, Rohit Nandwani                              
+          Demo license for demonstration and instructional purposes only
+Processor information: 1 socket(s), 2 core(s), and 2 thread(s) available
+GAMS 36.2.0   Copyright (C) 1987-2021 GAMS Development. All rights reserved
+--- Starting compilation
+--- q5_1_feasible.gms(213) 3 Mb
+--- Starting execution: elapsed 0:00:00.016
+--- q5_1_feasible.gms(99) 4 Mb
+--- Generating MIP model mod_payoff
+--- q5_1_feasible.gms(102) 4 Mb
+--- LOOPS kp = k1
+---       FOR/WHILE = 1
+---   5 rows  6 columns  15 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.029
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 0
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 4 rows and 6 columns.
+All rows and columns eliminated.
+Presolve time = 0.00 sec. (0.00 ticks)
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.00 ticks)
+
+
+Optimal solution found
+Objective:           18.123017
+
+--- Reading solution for model mod_payoff
+--- Executing after solve: elapsed 0:00:00.048
+--- q5_1_feasible.gms(99) 4 Mb
+--- Generating MIP model mod_payoff
+--- q5_1_feasible.gms(102) 4 Mb
+--- LOOPS kp = k1
+---       FOR/WHILE = 2
+---   5 rows  6 columns  15 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.053
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 3 rows and 5 columns.
+Aggregator did 1 substitutions.
+All rows and columns eliminated.
+Presolve time = 0.00 sec. (0.00 ticks)
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -4.530754
+
+--- Reading solution for model mod_payoff
+--- Executing after solve: elapsed 0:00:00.068
+--- q5_1_feasible.gms(99) 4 Mb
+--- Generating MIP model mod_payoff
+--- q5_1_feasible.gms(102) 4 Mb
+--- LOOPS kp = k2
+---       FOR/WHILE = 1
+---   5 rows  6 columns  15 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.078
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 2 rows and 3 columns.
+Reduced LP has 2 rows, 3 columns, and 5 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           76.271528
+
+--- Reading solution for model mod_payoff
+--- Executing after solve: elapsed 0:00:00.089
+--- q5_1_feasible.gms(99) 4 Mb
+--- Generating MIP model mod_payoff
+--- q5_1_feasible.gms(102) 4 Mb
+--- LOOPS kp = k2
+---       FOR/WHILE = 2
+---   5 rows  6 columns  15 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.101
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 3 columns.
+Reduced LP has 3 rows, 3 columns, and 8 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -107.833482
+
+--- Reading solution for model mod_payoff
+--- Executing after solve: elapsed 0:00:00.130
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 1
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.134
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+Iteration           Objective            In Variable           Out Variable
+     1              18.123017                  X(j3)    goes to lower bound
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           18.123017
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.152
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 2
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.162
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+
+Iteration      Dual Objective            In Variable           Out Variable
+     1 sI           29.599999                  X(j1)       objfun(k2) artif
+     2 sI            5.142856                  X(j3)          con(i2) slack
+     3 sI            0.000000                  X(j2)                  X(j1)
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.02 ticks)
+
+
+Optimal solution found
+Objective:           16.850729
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.180
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 3
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.186
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           15.578441
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.196
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 4
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.200
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           14.306154
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.210
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 5
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.216
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           13.033866
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.228
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 6
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.233
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           11.761578
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.243
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 7
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.247
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           10.489290
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.257
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 8
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.262
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            9.217002
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.272
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 9
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.276
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            7.944714
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.285
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 10
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.289
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            6.672426
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.309
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 11
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.313
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            5.400139
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.335
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 12
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.343
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            4.127851
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.359
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 13
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.364
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            2.855563
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.380
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 14
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.385
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            1.583275
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.394
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 15
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.398
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            0.310987
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.408
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 16
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.413
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -0.961301
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.430
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 17
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.441
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -2.233589
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.459
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 18
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.467
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -3.505877
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.478
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 19
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.483
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -4.778164
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.493
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 20
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.497
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -6.050452
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.507
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 21
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.511
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -7.322740
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.522
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 22
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.527
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -8.595028
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.549
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 23
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.555
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:           -9.867316
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.564
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 24
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.567
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -11.139604
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.577
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 25
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.582
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -12.411892
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.599
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 26
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.604
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -13.684180
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.624
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 27
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.628
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -14.956467
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.639
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 28
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.649
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -16.228755
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.669
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 29
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.674
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -17.501043
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.694
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 30
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.699
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -18.773331
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.710
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 31
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.715
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -20.045619
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.735
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 32
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.740
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -21.317907
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.765
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 33
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.773
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -22.590195
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.783
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 34
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.791
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -23.862482
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.802
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 35
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.808
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -25.134770
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.820
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 36
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.825
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -26.407058
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.844
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 37
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.849
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -27.679346
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.874
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 38
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.879
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -28.951634
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.892
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 39
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.897
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -30.223922
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.917
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 40
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.925
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -31.496210
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.937
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 41
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:00.949
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.01 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -32.768498
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:00.994
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 42
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.005
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -34.040785
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.026
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 43
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.035
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -35.313073
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.060
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 44
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.073
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -36.585361
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.101
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 45
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.109
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -37.857649
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.121
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 46
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.125
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -39.129937
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.136
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 47
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.141
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -40.402225
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.165
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 48
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.173
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -41.674513
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.190
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 49
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.223
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -42.946800
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.252
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 50
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.280
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -44.219088
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.327
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 51
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.347
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -45.491376
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.361
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 52
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.366
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -46.763664
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.406
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 53
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.411
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -48.035952
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.443
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 54
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.467
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.02 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -49.308240
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.506
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 55
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.513
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -50.580528
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.531
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 56
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.539
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -51.852816
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.554
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 57
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.562
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -53.125103
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.574
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 58
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.581
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -54.397391
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.604
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 59
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.609
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -55.669679
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.625
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 60
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.634
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -56.941967
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.646
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 61
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.651
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -58.214255
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.680
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 62
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.697
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -59.486543
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.714
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 63
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.721
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -60.758831
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.734
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 64
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.743
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -62.031118
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.756
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 65
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.761
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -63.303406
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.772
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 66
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.777
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -64.575694
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.792
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 67
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.807
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -65.847982
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.820
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 68
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.825
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -67.120270
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.849
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 69
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.858
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -68.392558
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.883
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 70
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.889
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -69.664846
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.918
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 71
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.924
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -70.937134
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.946
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 72
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.951
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -72.209421
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.971
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 73
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:01.976
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -73.481709
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:01.997
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 74
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.006
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -74.753997
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.031
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 75
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.035
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.01 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -76.026285
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.056
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 76
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.064
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -77.298573
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.091
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 77
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.096
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -78.570861
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.115
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 78
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.128
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -79.843149
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.149
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 79
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.157
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -81.115436
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.180
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 80
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.185
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -82.387724
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.207
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 81
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.212
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -83.660012
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.239
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 82
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.244
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -84.932300
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.300
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 83
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.314
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.02 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.03sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -86.204588
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.366
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 84
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.384
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -87.476876
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.420
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 85
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.432
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -88.749164
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.462
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 86
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.471
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -90.021452
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.498
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 87
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.509
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -91.293739
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.535
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 88
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.542
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -92.566027
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.568
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 89
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.574
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -93.838315
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.593
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 90
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.598
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.02 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -95.110603
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.638
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 91
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.646
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.02 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -96.382891
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.669
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 92
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.674
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -97.655179
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.693
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 93
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.698
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          -98.927467
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.719
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 94
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.724
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -100.199754
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.745
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 95
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.750
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -101.472042
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.776
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 96
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.781
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -102.744330
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.800
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 97
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.807
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -104.016618
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.826
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 98
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.831
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -105.288906
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.852
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 99
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.857
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -106.561194
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.882
+--- q5_1_feasible.gms(173) 4 Mb
+--- Generating MIP model mod_epsmethod
+--- q5_1_feasible.gms(175) 4 Mb
+--- LOOPS FOR/WHILE = 100
+---   6 rows  7 columns  18 non-zeroes
+--- Executing CPLEX (Solvelink=5): elapsed 0:00:02.889
+
+IBM ILOG CPLEX   36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 20.1.0.1 | 2021-04-07 | 3a818710c
+CPXPARAM_Advance                                 2
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_Threads                                 1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_MIP_Tolerances_MIPGap                   0
+Tried aggregator 1 time.
+LP Presolve eliminated 1 rows and 2 columns.
+Aggregator did 1 substitutions.
+Reduced LP has 3 rows, 4 columns, and 9 nonzeros.
+Presolve time = 0.00 sec. (0.00 ticks)
+Using devex.
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         -107.833482
+
+--- Reading solution for model mod_epsmethod
+--- Executing after solve: elapsed 0:00:02.909
+--- q5_1_feasible.gms(213) 4 Mb
+--- Putfile fx C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q5_feasible\q5_1_feasible\q5_1_feasible_solutions.txt
+*** Status: Normal completion
+--- Job q5_1_feasible.gms Stop 10/17/21 21:15:45 elapsed 0:00:02.942
