@@ -1,0 +1,21 @@
+B 3 C o m p i l a t i o n
+B 52 Equation Listing    SOLVE q4_infeasible Using MINLP From line 37
+D 55 e1
+D 60 e2
+D 65 e3
+D 70 e4
+D 75 e5
+D 80 e6
+D 85 e7
+B 91 Column Listing      SOLVE q4_infeasible Using MINLP From line 37
+E 94 x1
+E 105 x2
+E 115 x3
+E 124 f
+B 132 Model Statistics    SOLVE q4_infeasible Using MINLP From line 37
+B 146 Solution Report     SOLVE q4_infeasible Using MINLP From line 37
+B 175 E x e c u t i o n
+I 177 x1
+I 178 x2
+I 179 x3
+I 180 f

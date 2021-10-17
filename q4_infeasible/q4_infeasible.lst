@@ -1,0 +1,194 @@
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:26:02 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1   
+   2  Variables
+   3           x1      x1
+   4           x2      x2
+   5           x3      x3
+   6           f       Objective Function;
+   7   
+   8  Integer Variable
+   9           x2      x2
+  10           x3      x3;
+  11   
+  12  Nonnegative Variables
+  13           x1      x1;
+  14   
+  15  Equations
+  16           e1      Objective Function definition
+  17           e2      Lower Bound on x1
+  18           e3      Upper Bound on x1
+  19           e4      Upper Bound on x2
+  20           e5      Upper Bound on x3
+  21           e6      Constraint 1
+  22           e7      Constraint 2;
+  23   
+  24  e1..     f =e= power(x1,3)*power(x2,3) - x1*sqr(x2)*cos(x3);
+  25  e2..     x1 =g= -pi/2;
+  26  e3..     x1 =l= pi;
+  27  e4..     x2 =l= 100;
+  28  e5..     x3 =l= 100;
+  29  e6..     sqr(cos(x1)) - x2 + x3 =g= 0;
+  30  e7..     2*sqr(cos(4))*x1 - x2 - 7*sqr(cos(4)) =e= 0;
+  31   
+  32  Model q4_infeasible /all/;
+  33   
+  34  * Specifying the MINLP Solver
+  35  option MINLP = LINDO;
+  36   
+  37  Solve q4_infeasible using MINLP maximizing f;
+  38   
+  39  option decimals = 5;
+  40   
+  41  display x1.l, x2.l, x3.l, f.l;
+
+
+COMPILATION TIME     =        0.000 SECONDS      2 MB  36.2.0 r433180e WEX-WEI
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:26:02 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE q4_infeasible Using MINLP From line 37
+
+
+---- e1  =E=  Objective Function definition
+
+e1..  (0)*x1 + (0)*x2 + (0)*x3 + f =E= 0 ; (LHS = 0)
+     
+
+---- e2  =G=  Lower Bound on x1
+
+e2..  x1 =G= -1.5707963267949 ; (LHS = 0)
+     
+
+---- e3  =L=  Upper Bound on x1
+
+e3..  x1 =L= 3.14159265358979 ; (LHS = 0)
+     
+
+---- e4  =L=  Upper Bound on x2
+
+e4..  x2 =L= 100 ; (LHS = 0)
+     
+
+---- e5  =L=  Upper Bound on x3
+
+e5..  x3 =L= 100 ; (LHS = 0)
+     
+
+---- e6  =G=  Constraint 1
+
+e6..  (0)*x1 - x2 + x3 =G= 0 ; (LHS = 1)
+     
+
+---- e7  =E=  Constraint 2
+
+e7..  0.854499966191387*x1 - x2 =E= 2.99074988166985 ; (LHS = 0, INFES = 2.99074988166985 ****)
+     
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:26:02 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE q4_infeasible Using MINLP From line 37
+
+
+---- x1  x1
+
+x1
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      e1
+        1       e2
+        1       e3
+       (0)      e6
+        0.8545  e7
+
+
+---- x2  x2
+
+x2
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      e1
+        1       e4
+       -1       e6
+       -1       e7
+
+
+---- x3  x3
+
+x3
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      e1
+        1       e5
+        1       e6
+
+
+---- f  Objective Function
+
+f
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       e1
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:26:02 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE q4_infeasible Using MINLP From line 37
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           7     SINGLE EQUATIONS            7
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            4
+NON ZERO ELEMENTS            13     NON LINEAR N-Z              4
+CODE LENGTH                  22     CONSTANT POOL              16     DISCRETE VARIABLES          2
+
+
+GENERATION TIME      =        0.031 SECONDS      3 MB  36.2.0 r433180e WEX-WEI
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:26:02 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE q4_infeasible Using MINLP From line 37
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   q4_infeasible       OBJECTIVE  f
+     TYPE    MINLP               DIRECTION  MAXIMIZE
+     SOLVER  LINDO               FROM LINE  37
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      19 Infeasible - No Solution
+**** OBJECTIVE VALUE                0.0000
+
+ RESOURCE USAGE, LIMIT          0.032 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+ EVALUATION ERRORS             NA             0
+
+LINDO            36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+   LINDO Driver
+   Lindo Systems Inc, www.lindo.com
+
+*** This solver runs with a demo license. No commercial use.
+Lindo API version 13.0.4099.291 built on Jul  9 2021 22:43:27
+--- The model is infeasible. Set option "IIS" to check for irreducible infeasible set.
+
+No solution returned
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:26:02 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     41 VARIABLE x1.L                  =      0.00000  x1
+            VARIABLE x2.L                  =      0.00000  x2
+            VARIABLE x3.L                  =      0.00000  x3
+            VARIABLE f.L                   =      0.00000  Objective Function
+
+
+EXECUTION TIME       =        0.234 SECONDS      3 MB  36.2.0 r433180e WEX-WEI
+
+
+USER: GAMS Demo license for Rohit Nandwani           G210913|0002CO-GEN
+      Indian Institute Of Technology Guwahati, India           DL048134
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q4_infeasible\q4_infeasible.gms
+Output     C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q4_infeasible\q4_infeasible.lst

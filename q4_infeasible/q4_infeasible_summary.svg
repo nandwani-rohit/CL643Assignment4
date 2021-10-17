@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="151.50885mm"
+   height="78.384621mm"
+   viewBox="0 0 429.47445 222.19274"
+   version="1.2"
+   id="svg13025"
+   sodipodi:docname="trugod.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview13027"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.77490332"
+     inkscape:cx="671.69669"
+     inkscape:cy="152.9223"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg13025" />
+  <title
+     id="title12951">Qt Svg Document</title>
+  <desc
+     id="desc12953">Generated with Qt</desc>
+  <defs
+     id="defs12955">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath13133">
+      <rect
+         style="fill:none;stroke-width:0.742882"
+         id="rect13135"
+         width="429.4743"
+         height="222.19283"
+         x="8"
+         y="5.8071814" />
+    </clipPath>
+  </defs>
+  <g
+     fill="none"
+     stroke="#000000"
+     stroke-width="1"
+     fill-rule="evenodd"
+     stroke-linecap="square"
+     stroke-linejoin="bevel"
+     id="g13023"
+     clip-path="url(#clipPath13133)"
+     transform="translate(-8,-5.8071814)">
+    <g
+       fill="#ffffff"
+       fill-opacity="1"
+       stroke="none"
+       font-family="'MS Shell Dlg 2'"
+       font-size="8.25px"
+       font-weight="400"
+       font-style="normal"
+       id="g12963">
+      <path
+         vector-effect="non-scaling-stroke"
+         fill-rule="evenodd"
+         d="M 0,0 H 1024 V 241 H 0 V 0"
+         id="path12957" />
+      <path
+         vector-effect="non-scaling-stroke"
+         fill-rule="evenodd"
+         d="M 0,0 H 1024 V 241 H 0 V 0"
+         id="path12959" />
+      <path
+         vector-effect="non-scaling-stroke"
+         fill-rule="evenodd"
+         d="M 8,8 H 1016 V 228 H 8 V 8"
+         id="path12961" />
+    </g>
+    <g
+       fill="#000000"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g12969">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="26"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12965">               S O L V E      S U M M A R Y</text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="58"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12967">     </text>
+    </g>
+    <g
+       fill="#0000ff"
+       fill-opacity="1"
+       stroke="#0000ff"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g12973">
+      <text
+         fill="#0000ff"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="54"
+         y="58"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12971">MODEL</text>
+    </g>
+    <g
+       fill="#000000"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g12983">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="94"
+         y="58"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12975">   q4_infeasible       OBJECTIVE  f</text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="74"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12977">     TYPE    MINLP               DIRECTION  MAXIMIZE</text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="90"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12979">     SOLVER  LINDO               FROM LINE  </text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="366"
+         y="90"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12981">37</text>
+    </g>
+    <g
+       fill="#008000"
+       fill-opacity="1"
+       stroke="#008000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g12991">
+      <text
+         fill="#008000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="122"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12985">**** SOLVER STATUS     1 Normal Completion</text>
+      <text
+         fill="#008000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="138"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12987">**** MODEL STATUS      19 Infeasible - No Solution</text>
+      <text
+         fill="#008000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="154"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12989">**** OBJECTIVE VALUE                0.0000</text>
+    </g>
+    <g
+       fill="#000000"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g13011">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="186"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12993"> RESOURCE USAGE, LIMIT          </text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="270"
+         y="186"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12995">0.032</text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="310"
+         y="186"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12997"> </text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="318"
+         y="186"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text12999">10000000000.000</text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="202"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text13001"> ITERATION COUNT, LIMIT         </text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="270"
+         y="202"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text13003">0</text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="278"
+         y="202"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text13005">    </text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="310"
+         y="202"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text13007">2147483647</text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="218"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text13009"> EVALUATION ERRORS             </text>
+    </g>
+    <g
+       fill="#a31515"
+       fill-opacity="1"
+       stroke="#a31515"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g13015">
+      <text
+         fill="#a31515"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="262"
+         y="218"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text13013">NA</text>
+    </g>
+    <g
+       fill="#000000"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g13021">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="278"
+         y="218"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text13017">             </text>
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="382"
+         y="218"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text13019">0</text>
+    </g>
+  </g>
+</svg>
