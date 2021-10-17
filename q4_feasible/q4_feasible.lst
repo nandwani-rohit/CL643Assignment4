@@ -1,0 +1,243 @@
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:25:05 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1   
+   2  Variables
+   3           x1      x1
+   4           x2      x2
+   5           x3      x3
+   6           f       Objective Function;
+   7   
+   8  Integer Variable
+   9           x2      x2
+  10           x3      x3;
+  11   
+  12  Nonnegative Variables
+  13           x1      x1;
+  14   
+  15  Equations
+  16           e1      Objective Function definition
+  17           e2      Upper Bound on x1
+  18           e3      Upper Bound on x2
+  19           e4      Upper Bound on x3
+  20           e5      Constraint 1
+  21           e6      Constraint 2
+  22           e7      Constraint 3;
+  23   
+  24  e1..     f =e= power(x1,3)*power(x2,3) - x1*sqr(x2)*sin(x3);
+  25  e2..     x1 =l= 100;
+  26  e3..     x2 =l= 100;
+  27  e4..     x3 =l= 100;
+  28  e5..     -4*power(x1,3) + x2 =g= 0;
+  29  e6..     x2 - x3 - 3 =l= 0;
+  30  e7..     13*x1 - 1.5*x2 + 1.98*x3 =e= 84.03226;
+  31   
+  32  Model q4_feasible /all/;
+  33   
+  34  * Specifying the MINLP Solver
+  35  option MINLP = LINDO;
+  36   
+  37  Solve q4_feasible using MINLP maximizing f;
+  38   
+  39  option decimals = 5;
+  40   
+  41  display x1.l, x2.l, x3.l, f.l;
+
+
+COMPILATION TIME     =        0.000 SECONDS      2 MB  36.2.0 r433180e WEX-WEI
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:25:05 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE q4_feasible Using MINLP From line 37
+
+
+---- e1  =E=  Objective Function definition
+
+e1..  (0)*x1 + (0)*x2 + (0)*x3 + f =E= 0 ; (LHS = 0)
+     
+
+---- e2  =L=  Upper Bound on x1
+
+e2..  x1 =L= 100 ; (LHS = 0)
+     
+
+---- e3  =L=  Upper Bound on x2
+
+e3..  x2 =L= 100 ; (LHS = 0)
+     
+
+---- e4  =L=  Upper Bound on x3
+
+e4..  x3 =L= 100 ; (LHS = 0)
+     
+
+---- e5  =G=  Constraint 1
+
+e5..  (0)*x1 + x2 =G= 0 ; (LHS = 0)
+     
+
+---- e6  =L=  Constraint 2
+
+e6..  x2 - x3 =L= 3 ; (LHS = 0)
+     
+
+---- e7  =E=  Constraint 3
+
+e7..  13*x1 - 1.5*x2 + 1.98*x3 =E= 84.03226 ; (LHS = 0, INFES = 84.03226 ****)
+     
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:25:05 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE q4_feasible Using MINLP From line 37
+
+
+---- x1  x1
+
+x1
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      e1
+        1       e2
+       (0)      e5
+       13       e7
+
+
+---- x2  x2
+
+x2
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      e1
+        1       e3
+        1       e5
+        1       e6
+       -1.5     e7
+
+
+---- x3  x3
+
+x3
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      e1
+        1       e4
+       -1       e6
+        1.98    e7
+
+
+---- f  Objective Function
+
+f
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       e1
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:25:05 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE q4_feasible Using MINLP From line 37
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           7     SINGLE EQUATIONS            7
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            4
+NON ZERO ELEMENTS            14     NON LINEAR N-Z              4
+CODE LENGTH                  24     CONSTANT POOL              16     DISCRETE VARIABLES          2
+
+
+GENERATION TIME      =        0.062 SECONDS      3 MB  36.2.0 r433180e WEX-WEI
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:25:05 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE q4_feasible Using MINLP From line 37
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   q4_feasible         OBJECTIVE  f
+     TYPE    MINLP               DIRECTION  MAXIMIZE
+     SOLVER  LINDO               FROM LINE  37
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      8 Integer Solution
+**** OBJECTIVE VALUE         25029217.7730
+
+ RESOURCE USAGE, LIMIT          0.640 10000000000.000
+ ITERATION COUNT, LIMIT        39    2147483647
+ EVALUATION ERRORS             NA             0
+
+LINDO            36.2.0 r433180e Released Sep 03, 2021 WEI x86 64bit/MS Window
+
+   LINDO Driver
+   Lindo Systems Inc, www.lindo.com
+
+*** This solver runs with a demo license. No commercial use.
+Lindo API version 13.0.4099.291 built on Jul  9 2021 22:43:27
+
+--- Fixing integer variables and calculating reduced costs
+
+
+--- Done calculating reduced costs
+
+*** Solver stopped because of numerical instability.
+*** Solver stopped because of numerical instability.
+*** Solver stopped because of numerical instability.
+
+Solution      = 25029217.6077374
+Best possible = 25029240.1776892
+Absolute gap  = 22.569951813668  (OptCA = 0)
+Relative gap  = 0.00000  (OptCR = 0.0001)
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU e1                  .              .              .             1.0000      
+---- EQU e2                -INF            2.9240       100.0000          .          
+---- EQU e3                -INF          100.0000       100.0000          .          
+---- EQU e4                -INF           99.0000       100.0000          .          
+---- EQU e5                  .       -3.150324E-6        +INF             .          
+---- EQU e6                -INF            1.0000         3.0000          .          
+---- EQU e7                84.0323        84.0322        84.0323          .          
+
+  e1  Objective Function definition
+  e2  Upper Bound on x1
+  e3  Upper Bound on x2
+  e4  Upper Bound on x3
+  e5  Constraint 1
+  e6  Constraint 2
+  e7  Constraint 3
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR x1                  .             2.9240        +INF             .          
+---- VAR x2                  .           100.0000        +INF            EPS         
+---- VAR x3                  .            99.0000        +INF            EPS         
+---- VAR f                 -INF      2.5029218E+7        +INF             .          
+
+  x1  x1
+  x2  x2
+  x3  x3
+  f  Objective Function
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:25:05 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     41 VARIABLE x1.L                  =      2.92402  x1
+            VARIABLE x2.L                  =    100.00000  x2
+            VARIABLE x3.L                  =     99.00000  x3
+            VARIABLE f.L                   =  2.502922E+7  Objective Function
+
+
+EXECUTION TIME       =        1.281 SECONDS      3 MB  36.2.0 r433180e WEX-WEI
+
+
+USER: GAMS Demo license for Rohit Nandwani           G210913|0002CO-GEN
+      Indian Institute Of Technology Guwahati, India           DL048134
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q4_feasible\q4_feasible.gms
+Output     C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q4_feasible\q4_feasible.lst

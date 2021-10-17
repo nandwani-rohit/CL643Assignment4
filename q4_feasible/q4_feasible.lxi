@@ -1,0 +1,32 @@
+B 3 C o m p i l a t i o n
+B 52 Equation Listing    SOLVE q4_feasible Using MINLP From line 37
+D 55 e1
+D 60 e2
+D 65 e3
+D 70 e4
+D 75 e5
+D 80 e6
+D 85 e7
+B 91 Column Listing      SOLVE q4_feasible Using MINLP From line 37
+E 94 x1
+E 104 x2
+E 115 x3
+E 125 f
+B 133 Model Statistics    SOLVE q4_feasible Using MINLP From line 37
+B 147 Solution Report     SOLVE q4_feasible Using MINLP From line 37
+F 189 e1
+F 190 e2
+F 191 e3
+F 192 e4
+F 193 e5
+F 194 e6
+F 195 e7
+G 207 x1
+G 208 x2
+G 209 x3
+G 210 f
+B 224 E x e c u t i o n
+I 226 x1
+I 227 x2
+I 228 x3
+I 229 f
