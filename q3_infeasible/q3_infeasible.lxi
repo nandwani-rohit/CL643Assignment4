@@ -1,0 +1,18 @@
+B 3 C o m p i l a t i o n
+B 50 Equation Listing    SOLVE q3_infeasible Using MIP From line 35
+D 53 e1
+D 58 e2
+D 63 e3
+D 68 e4
+B 74 Column Listing      SOLVE q3_infeasible Using MIP From line 35
+E 77 x1
+E 86 x2
+E 96 x3
+E 105 f
+B 113 Model Statistics    SOLVE q3_infeasible Using MIP From line 35
+B 126 Solution Report     SOLVE q3_infeasible Using MIP From line 35
+B 157 E x e c u t i o n
+I 159 x1
+I 160 x2
+I 161 x3
+I 162 f
