@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="182.28331mm"
+   height="23.419178mm"
+   viewBox="0 0 516.70925 66.385054"
+   version="1.2"
+   id="svg2398"
+   sodipodi:docname="trugod.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview2400"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.0958788"
+     inkscape:cx="400.13549"
+     inkscape:cy="36.044132"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2398" />
+  <title
+     id="title2322">Qt Svg Document</title>
+  <desc
+     id="desc2324">Generated with Qt</desc>
+  <defs
+     id="defs2326">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath2506">
+      <rect
+         style="fill:#000000;stroke-width:0.750001"
+         id="rect2508"
+         width="516.70923"
+         height="66.385155"
+         x="9.5813627"
+         y="30.797157" />
+    </clipPath>
+  </defs>
+  <g
+     fill="none"
+     stroke="#000000"
+     stroke-width="1"
+     fill-rule="evenodd"
+     stroke-linecap="square"
+     stroke-linejoin="bevel"
+     id="g2396"
+     clip-path="url(#clipPath2506)"
+     transform="translate(-9.5813627,-30.79724)">
+    <g
+       fill="#ffffff"
+       fill-opacity="1"
+       stroke="none"
+       font-family="'MS Shell Dlg 2'"
+       font-size="8.25px"
+       font-weight="400"
+       font-style="normal"
+       id="g2334">
+      <path
+         vector-effect="non-scaling-stroke"
+         fill-rule="evenodd"
+         d="M 0,0 H 1024 V 113 H 0 V 0"
+         id="path2328" />
+      <path
+         vector-effect="non-scaling-stroke"
+         fill-rule="evenodd"
+         d="M 0,0 H 1024 V 113 H 0 V 0"
+         id="path2330" />
+      <path
+         vector-effect="non-scaling-stroke"
+         fill-rule="evenodd"
+         d="m 8,8 h 1008 v 92 H 8 V 8"
+         id="path2332" />
+    </g>
+    <g
+       fill="#0000ff"
+       fill-opacity="1"
+       stroke="#0000ff"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2338">
+      <text
+         fill="#0000ff"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="26"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2336">VARIABLE</text>
+    </g>
+    <g
+       fill="#000000"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2342">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="78"
+         y="26"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2340"> x1.L                  </text>
+    </g>
+    <g
+       fill="#008000"
+       fill-opacity="1"
+       stroke="#008000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2346">
+      <text
+         fill="#008000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="262"
+         y="26"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2344">=      0.00000  x1</text>
+    </g>
+    <g
+       fill="#0000ff"
+       fill-opacity="1"
+       stroke="#0000ff"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2350">
+      <text
+         fill="#0000ff"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="42"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2348">VARIABLE</text>
+    </g>
+    <g
+       fill="#000000"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2354">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="78"
+         y="42"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2352"> </text>
+    </g>
+    <g
+       fill="#008000"
+       fill-opacity="1"
+       stroke="#008000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2358">
+      <text
+         fill="#008000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="86"
+         y="42"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2356">x1.L                  =      0.00000  x1</text>
+    </g>
+    <g
+       fill="#0000ff"
+       fill-opacity="1"
+       stroke="#0000ff"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2362">
+      <text
+         fill="#0000ff"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="58"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2360">VARIABLE</text>
+    </g>
+    <g
+       fill="#000000"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2366">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="78"
+         y="58"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2364"> </text>
+    </g>
+    <g
+       fill="#008000"
+       fill-opacity="1"
+       stroke="#008000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2370">
+      <text
+         fill="#008000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="86"
+         y="58"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2368">x2.L                  =      4.53075  x2</text>
+    </g>
+    <g
+       fill="#0000ff"
+       fill-opacity="1"
+       stroke="#0000ff"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2374">
+      <text
+         fill="#0000ff"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="74"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2372">VARIABLE</text>
+    </g>
+    <g
+       fill="#000000"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2378">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="78"
+         y="74"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2376"> </text>
+    </g>
+    <g
+       fill="#008000"
+       fill-opacity="1"
+       stroke="#008000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2382">
+      <text
+         fill="#008000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="86"
+         y="74"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2380">x3.L                  =      0.00000  x3</text>
+    </g>
+    <g
+       fill="#0000ff"
+       fill-opacity="1"
+       stroke="#0000ff"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2386">
+      <text
+         fill="#0000ff"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="14"
+         y="90"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2384">VARIABLE</text>
+    </g>
+    <g
+       fill="#000000"
+       fill-opacity="1"
+       stroke="#000000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2390">
+      <text
+         fill="#000000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="78"
+         y="90"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2388"> </text>
+    </g>
+    <g
+       fill="#008000"
+       fill-opacity="1"
+       stroke="#008000"
+       stroke-opacity="1"
+       stroke-width="1"
+       stroke-linecap="square"
+       stroke-linejoin="bevel"
+       font-family="'Courier New'"
+       font-size="13px"
+       font-weight="400"
+       font-style="normal"
+       id="g2394">
+      <text
+         fill="#008000"
+         fill-opacity="1"
+         stroke="none"
+         xml:space="preserve"
+         x="86"
+         y="90"
+         font-family="'Courier New'"
+         font-size="13px"
+         font-weight="400"
+         font-style="normal"
+         id="text2392">f.L                   =      2.40433  Objective Function</text>
+    </g>
+  </g>
+</svg>

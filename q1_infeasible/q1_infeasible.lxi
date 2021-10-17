@@ -1,0 +1,24 @@
+B 3 C o m p i l a t i o n
+B 41 Equation Listing    SOLVE q1_infeasible Using LP From line 26
+D 44 e1
+D 49 e2
+D 54 e3
+B 60 Column Listing      SOLVE q1_infeasible Using LP From line 26
+E 63 x1
+E 72 x2
+E 81 x3
+E 89 f
+B 97 Model Statistics    SOLVE q1_infeasible Using LP From line 26
+B 110 Solution Report     SOLVE q1_infeasible Using LP From line 26
+F 148 e1
+F 149 e2
+F 150 e3
+G 158 x1
+G 159 x2
+G 160 x3
+G 161 f
+B 177 E x e c u t i o n
+I 179 x1
+I 180 x2
+I 181 x3
+I 182 f
