@@ -1,0 +1,26 @@
+B 3 C o m p i l a t i o n
+B 49 Equation Listing    SOLVE q3_feasible Using MIP From line 34
+D 52 e1
+D 57 e2
+D 62 e3
+D 67 e4
+B 73 Column Listing      SOLVE q3_feasible Using MIP From line 34
+E 76 x1
+E 86 x2
+E 95 x3
+E 103 f
+B 111 Model Statistics    SOLVE q3_feasible Using MIP From line 34
+B 124 Solution Report     SOLVE q3_feasible Using MIP From line 34
+F 168 e1
+F 169 e2
+F 170 e3
+F 171 e4
+G 180 x1
+G 181 x2
+G 182 x3
+G 183 f
+B 196 E x e c u t i o n
+I 198 x1
+I 199 x2
+I 200 x3
+I 201 f

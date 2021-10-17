@@ -1,0 +1,215 @@
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:21:56 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1   
+   2  Variables
+   3           x1      x1
+   4           x2      x2
+   5           x3      x3
+   6           f       Objective Function;
+   7   
+   8  Integer Variable
+   9           x3      x3;
+  10   
+  11  Nonnegative Variables
+  12           x1      x1
+  13           x2      x2;
+  14   
+  15  Equations
+  16           e1      Objective Function definition
+  17           e2      Constraint 1
+  18           e3      Constraint 2
+  19           e4      Constraint 3;
+  20   
+  21  e1..     f =e= 5*x1 - x2 + 10*x3;
+  22  e2..     15*x1 - x3 =g= 3;
+  23  e3..     x2 + 9*x1 =l= 6;
+  24  e4..     -9*x1 + 4*x2 =e= 15;
+  25   
+  26  * Bounding the decision variables
+  27  x3.up = 20;
+  28   
+  29  Model q3_feasible /all/;
+  30   
+  31  * Specifying the MIP Solver
+  32  option MIP = CPLEX;
+  33   
+  34  Solve q3_feasible using MIP minimizing f;
+  35   
+  36  option decimals = 5;
+  37   
+  38  display x1.l, x2.l, x3.l, f.l;
+
+
+COMPILATION TIME     =        0.015 SECONDS      2 MB  36.2.0 r433180e WEX-WEI
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:21:56 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE q3_feasible Using MIP From line 34
+
+
+---- e1  =E=  Objective Function definition
+
+e1..  - 5*x1 + x2 - 10*x3 + f =E= 0 ; (LHS = 0)
+     
+
+---- e2  =G=  Constraint 1
+
+e2..  15*x1 - x3 =G= 3 ; (LHS = 0, INFES = 3 ****)
+     
+
+---- e3  =L=  Constraint 2
+
+e3..  9*x1 + x2 =L= 6 ; (LHS = 0)
+     
+
+---- e4  =E=  Constraint 3
+
+e4..  - 9*x1 + 4*x2 =E= 15 ; (LHS = 0, INFES = 15 ****)
+     
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:21:56 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE q3_feasible Using MIP From line 34
+
+
+---- x1  x1
+
+x1
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -5       e1
+       15       e2
+        9       e3
+       -9       e4
+
+
+---- x2  x2
+
+x2
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       e1
+        1       e3
+        4       e4
+
+
+---- x3  x3
+
+x3
+                (.LO, .L, .UP, .M = 0, 0, 20, 0)
+      -10       e1
+       -1       e2
+
+
+---- f  Objective Function
+
+f
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       e1
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:21:56 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE q3_feasible Using MIP From line 34
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            4
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            4
+NON ZERO ELEMENTS            10     DISCRETE VARIABLES          1
+
+
+GENERATION TIME      =        0.063 SECONDS      3 MB  36.2.0 r433180e WEX-WEI
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:21:56 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE q3_feasible Using MIP From line 34
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   q3_feasible         OBJECTIVE  f
+     TYPE    MIP                 DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  34
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               -3.2000
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- MIP status (101): integer optimal solution.
+--- Cplex Time: 0.02sec (det. 0.00 ticks)
+
+--- Fixing integer variables and solving final LP...
+
+
+--- Fixed MIP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.00 ticks)
+
+
+Proven optimal solution
+MIP Solution:           -3.200000    (0 iterations, 0 nodes)
+Final Solve:            -3.200000    (0 iterations)
+
+Best possible:          -3.200000
+Absolute gap:            0.000000
+Relative gap:            0.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU e1                  .              .              .             1.0000      
+---- EQU e2                 3.0000         3.0000        +INF            0.1833      
+---- EQU e3                -INF            6.0000         6.0000          .          
+---- EQU e4                15.0000        15.0000        15.0000        -0.2500      
+
+  e1  Objective Function definition
+  e2  Constraint 1
+  e3  Constraint 2
+  e4  Constraint 3
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR x1                  .             0.2000        +INF             .          
+---- VAR x2                  .             4.2000        +INF             .          
+---- VAR x3                  .              .            20.0000        10.1833      
+---- VAR f                 -INF           -3.2000        +INF             .          
+
+  x1  x1
+  x2  x2
+  x3  x3
+  f  Objective Function
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:21:56 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     38 VARIABLE x1.L                  =      0.20000  x1
+            VARIABLE x2.L                  =      4.20000  x2
+            VARIABLE x3.L                  =      0.00000  x3
+            VARIABLE f.L                   =     -3.20000  Objective Function
+
+
+EXECUTION TIME       =        0.328 SECONDS      3 MB  36.2.0 r433180e WEX-WEI
+
+
+USER: GAMS Demo license for Rohit Nandwani           G210913|0002CO-GEN
+      Indian Institute Of Technology Guwahati, India           DL048134
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q3_feasible\q3_feasible.gms
+Output     C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q3_feasible\q3_feasible.lst
