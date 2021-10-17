@@ -1,0 +1,24 @@
+B 3 C o m p i l a t i o n
+B 41 Equation Listing    SOLVE q1_feasible Using LP From line 26
+D 44 e1
+D 49 e2
+D 54 e3
+B 60 Column Listing      SOLVE q1_feasible Using LP From line 26
+E 63 x1
+E 72 x2
+E 81 x3
+E 89 f
+B 97 Model Statistics    SOLVE q1_feasible Using LP From line 26
+B 110 Solution Report     SOLVE q1_feasible Using LP From line 26
+F 143 e1
+F 144 e2
+F 145 e3
+G 153 x1
+G 154 x2
+G 155 x3
+G 156 f
+B 169 E x e c u t i o n
+I 171 x1
+I 172 x2
+I 173 x3
+I 174 f
