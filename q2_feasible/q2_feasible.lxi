@@ -1,0 +1,26 @@
+B 3 C o m p i l a t i o n
+B 46 Equation Listing    SOLVE q2_feasible Using NLP From line 31
+D 49 e1
+D 54 e2
+D 59 e3
+D 64 e4
+B 70 Column Listing      SOLVE q2_feasible Using NLP From line 31
+E 73 x1
+E 82 x2
+E 90 x3
+E 100 f
+B 108 Model Statistics    SOLVE q2_feasible Using NLP From line 31
+B 122 Solution Report     SOLVE q2_feasible Using NLP From line 31
+F 171 e1
+F 172 e2
+F 173 e3
+F 174 e4
+G 183 x1
+G 184 x2
+G 185 x3
+G 186 f
+B 200 E x e c u t i o n
+I 202 x1
+I 203 x2
+I 204 x3
+I 205 f

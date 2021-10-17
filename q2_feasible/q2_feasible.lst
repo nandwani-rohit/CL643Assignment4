@@ -1,0 +1,219 @@
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:17:55 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  Variables
+   2           x1      x1
+   3           x2      x2
+   4           x3      x3
+   5           f       Objective Function;
+   6   
+   7  Scalar
+   8           tolerance substitute for 0 to allow strict inequalities within a tolerance /1e-8/;
+   9   
+  10  Equations
+  11           e1      Objective Function definition
+  12           e2      Constraint 1
+  13           e3      Constraint 2
+  14           e4      Constraint 3;
+  15   
+  16  e1..     f =e= x3 - power(x2+x1/2,4) * exp(sqr(x2)-sqr(x1));
+  17  e2..     -3*sqr(x1) + x3 - 0.4 =g= tolerance;
+  18  e3..     x3 - 3.9 =l= -tolerance;
+  19  e4..     x1*x2 - x3 =e= tolerance;
+  20   
+  21  * Starting position in the feasible region
+  22  x1.l = 1;
+  23  x2.l = 1;
+  24  x3.l = 1;
+  25   
+  26  Model q2_feasible /all/;
+  27   
+  28  * Specifying the NLP Solver
+  29  option NLP = CONOPT;
+  30   
+  31  Solve q2_feasible using NLP maximizing f;
+  32   
+  33  option decimals = 6;
+  34   
+  35  display x1.l, x2.l, x3.l, f.l;
+
+
+COMPILATION TIME     =        0.000 SECONDS      2 MB  36.2.0 r433180e WEX-WEI
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:17:55 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE q2_feasible Using NLP From line 31
+
+
+---- e1  =E=  Objective Function definition
+
+e1..  - (3.375)*x1 + (23.625)*x2 - x3 + f =E= 0 ; (LHS = 4.0625, INFES = 4.0625 ****)
+     
+
+---- e2  =G=  Constraint 1
+
+e2..  - (6)*x1 + x3 =G= 0.40000001 ; (LHS = -2, INFES = 2.40000001 ****)
+     
+
+---- e3  =L=  Constraint 2
+
+e3..  x3 =L= 3.89999999 ; (LHS = 1)
+     
+
+---- e4  =E=  Constraint 3
+
+e4..  (1)*x1 + (1)*x2 - x3 =E= 1E-8 ; (LHS = 0, INFES = 1E-8 ****)
+     
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:17:55 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE q2_feasible Using NLP From line 31
+
+
+---- x1  x1
+
+x1
+                (.LO, .L, .UP, .M = -INF, 1, +INF, 0)
+      (-3.375)  e1
+      (-6)      e2
+       (1)      e4
+
+
+---- x2  x2
+
+x2
+                (.LO, .L, .UP, .M = -INF, 1, +INF, 0)
+      (23.625)  e1
+       (1)      e4
+
+
+---- x3  x3
+
+x3
+                (.LO, .L, .UP, .M = -INF, 1, +INF, 0)
+       -1       e1
+        1       e2
+        1       e3
+       -1       e4
+
+
+---- f  Objective Function
+
+f
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       e1
+
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:17:55 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE q2_feasible Using NLP From line 31
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            4
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES            4
+NON ZERO ELEMENTS            10     NON LINEAR N-Z              5
+CODE LENGTH                  25     CONSTANT POOL              16
+
+
+GENERATION TIME      =        0.063 SECONDS      3 MB  36.2.0 r433180e WEX-WEI
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:17:55 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE q2_feasible Using NLP From line 31
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   q2_feasible         OBJECTIVE  f
+     TYPE    NLP                 DIRECTION  MAXIMIZE
+     SOLVER  CONOPT              FROM LINE  31
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      2 Locally Optimal
+**** OBJECTIVE VALUE            -3373.7116
+
+ RESOURCE USAGE, LIMIT          0.360 10000000000.000
+ ITERATION COUNT, LIMIT        40    2147483647
+ EVALUATION ERRORS              0             0
+--- *** This solver runs with a demo license. No commercial use.
+ 
+ 
+    C O N O P T 3   version 3.17K
+    Copyright (C)   ARKI Consulting and Development A/S
+                    Bagsvaerdvej 246 A
+                    DK-2880 Bagsvaerd, Denmark
+ 
+ 
+    The model has 4 variables and 4 constraints
+    with 10 Jacobian elements, 5 of which are nonlinear.
+    The Hessian of the Lagrangian has 2 elements on the diagonal,
+    1 elements below the diagonal, and 2 nonlinear variables.
+ 
+ ** Warning **  The value of LFITER is out of range.
+                LFITER is decreased from 2147483647 to 1000000000.
+ 
+                   Pre-triangular equations:   0
+                   Post-triangular equations:  1
+                   Definitional equations:     1
+ 
+ 
+ ** Optimal solution. Reduced gradient less than tolerance.
+ 
+ 
+ CONOPT time Total                            0.328 seconds
+   of which: Function evaluations             0.062 = 18.9%
+             1st Derivative evaluations       0.000 =  0.0%
+             Directional 2nd Derivative       0.031 =  9.5%
+ 
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU e1                  .              .              .             1.0000      
+---- EQU e2                 0.4000         0.4000        +INF       -56247.2326      
+---- EQU e3                -INF            0.7975         3.9000          .          
+---- EQU e4           1.0000000E-8   1.0000000E-8   1.0000000E-8    -56248.2326      
+
+  e1  Objective Function definition
+  e2  Constraint 1
+  e3  Constraint 2
+  e4  Constraint 3
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR x1                -INF            0.3640        +INF            EPS         
+---- VAR x2                -INF            2.1909        +INF             .          
+---- VAR x3                -INF            0.7975        +INF             .          
+---- VAR f                 -INF        -3373.7116        +INF             .          
+
+  x1  x1
+  x2  x2
+  x3  x3
+  f  Objective Function
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 36.2.0  r433180e Released Sep  3, 2021 WEX-WEI x86 64bit/MS Windows - 10/14/21 22:17:55 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     35 VARIABLE x1.L                  =     0.364008  x1
+            VARIABLE x2.L                  =     2.190901  x2
+            VARIABLE x3.L                  =     0.797506  x3
+            VARIABLE f.L                   =  -3.37371E+3  Objective Function
+
+
+EXECUTION TIME       =        0.594 SECONDS      3 MB  36.2.0 r433180e WEX-WEI
+
+
+USER: GAMS Demo license for Rohit Nandwani           G210913|0002CO-GEN
+      Indian Institute Of Technology Guwahati, India           DL048134
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q2_feasible\q2_feasible.gms
+Output     C:\Users\alpha\OneDrive - Indian Institute of Technology Guwahati\It's time to Clear THings UP\Semester 7\CL643 Computer Aided Applied Optimization\Assignment 4\q2_feasible\q2_feasible.lst
