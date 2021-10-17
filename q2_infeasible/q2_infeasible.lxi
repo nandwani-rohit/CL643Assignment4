@@ -1,0 +1,24 @@
+B 3 C o m p i l a t i o n
+B 49 Equation Listing    SOLVE q2_infeasible Using NLP From line 34
+D 52 e1
+D 57 e2
+D 62 e3
+B 68 Column Listing      SOLVE q2_infeasible Using NLP From line 34
+E 71 x1
+E 80 x2
+E 89 x3
+E 97 f
+B 105 Model Statistics    SOLVE q2_infeasible Using NLP From line 34
+B 119 Solution Report     SOLVE q2_infeasible Using NLP From line 34
+F 168 e1
+F 169 e2
+F 170 e3
+G 178 x1
+G 179 x2
+G 180 x3
+G 181 f
+B 198 E x e c u t i o n
+I 200 x1
+I 201 x2
+I 202 x3
+I 203 f
